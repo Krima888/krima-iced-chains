@@ -68,7 +68,7 @@
         .section-title { text-align: center; padding: 25px 20px 5px; font-size: 0.8em; text-transform: uppercase; letter-spacing: 3px; color: var(--text-secondary); z-index: 5; position: relative; }
         .products { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 24px; padding: 15px 24px 30px; max-width: 1200px; margin: 0 auto; position: relative; z-index: 5; }
         .product-card { background: var(--card-bg); border-radius: var(--card-radius); overflow: hidden; border: 1px solid var(--card-border); backdrop-filter: var(--glass-blur); position: relative; transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); animation: fadeInUp 0.6s ease forwards; opacity: 0; }
-        .product-card:nth-child(1) { animation-delay: 0.1s; } .product-card:nth-child(2) { animation-delay: 0.2s; } .product-card:nth-child(3) { animation-delay: 0.3s; } .product-card:nth-child(4) { animation-delay: 0.4s; } .product-card:nth-child(5) { animation-delay: 0.5s; }
+        .product-card:nth-child(1) { animation-delay: 0.05s; } .product-card:nth-child(2) { animation-delay: 0.1s; } .product-card:nth-child(3) { animation-delay: 0.15s; } .product-card:nth-child(4) { animation-delay: 0.2s; } .product-card:nth-child(5) { animation-delay: 0.25s; } .product-card:nth-child(6) { animation-delay: 0.3s; } .product-card:nth-child(7) { animation-delay: 0.35s; }
         @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
         .product-card:hover { transform: translateY(-8px); box-shadow: 0 20px 50px rgba(0,0,0,0.4), 0 0 0 1px var(--accent); border-color: var(--accent); }
         .product-card .img-wrap { position: relative; overflow: hidden; height: 260px; cursor: pointer; }
@@ -133,10 +133,7 @@
 </head>
 <body class="theme-dark-gold">
 
-    <!-- BACKGROUND PARTICLES -->
     <div class="bg-particles" id="bgParticles"></div>
-
-    <!-- THEME OVERLAY -->
     <div class="theme-overlay" id="themeOverlay" onclick="closeThemePanel()"></div>
 
     <!-- THEME PANEL -->
@@ -166,7 +163,6 @@
         <p>Premium Cuban Chains, Bracelets & Watches</p>
     </div>
 
-    <!-- PRODUCT SECTION TITLE -->
     <div class="section-title">— Our Collection —</div>
 
     <!-- PRODUCTS -->
@@ -182,17 +178,20 @@
     <a href="https://wa.me/254722621818" target="_blank" class="whatsapp-float" title="Chat on WhatsApp">💬</a>
 
     <script>
-        // PRODUCTS
+        // PRODUCTS - 7 items total
         const products = [
             { name: "Cuban Gold Chain", price: 1000, image: "chain1.jpg", badge: "hot", badgeText: "🔥 Bestseller" },
             { name: "Cuban Silver Chain", price: 1000, image: "chain2.jpg", badge: "new", badgeText: "✨ New" },
             { name: "Cuban Blue Ice Chain", price: 1000, image: "chain3.jpg", badge: "value", badgeText: "💎 Value Pick" },
             { name: "Cuban Gold Bracelet", price: 800, image: "chain4.jpg", badge: "hot", badgeText: "🔥 Popular" },
-            { name: "Cuban Iced Set", price: 1999, image: "chain5.jpg", badge: "new", badgeText: "⭐ Premium Set" }
+            { name: "Cuban Iced Set", price: 1999, image: "chain5.jpg", badge: "new", badgeText: "⭐ Premium Set" },
+            { name: "Cuban Iced Bracelet", price: 800, image: "chain6.jpg", badge: "new", badgeText: "✨ New" },
+            { name: "Cuban Golden Iced Chain", price: 1000, image: "chain7.jpg", badge: "hot", badgeText: "🔥 Trending" }
         ];
 
         const container = document.getElementById('productsContainer');
         const badgeClasses = { hot: 'badge-hot', new: 'badge-new', value: 'badge-value' };
+
         products.forEach((p, i) => {
             const badgeHTML = p.badge ? `<span class="badge ${badgeClasses[p.badge]}">${p.badgeText}</span>` : '';
             container.innerHTML += `
@@ -274,15 +273,13 @@
             localStorage.setItem('krima-theme', themeClass);
             createParticles();
         }
-
-        // SAVED THEME
         const saved = localStorage.getItem('krima-theme');
         if (saved) { document.body.className = saved; document.querySelectorAll('.theme-option').forEach(el => { el.classList.remove('active'); if (el.getAttribute('onclick') && el.getAttribute('onclick').includes(saved)) el.classList.add('active'); }); }
 
-        // BACKGROUND PARTICLES
+        // PARTICLES
         function createParticles() {
-            const particlesContainer = document.getElementById('bgParticles');
-            particlesContainer.innerHTML = '';
+            const pc = document.getElementById('bgParticles');
+            pc.innerHTML = '';
             const colors = ['#f5a623', '#4CAF50', '#ffffff', '#00d4ff', '#a855f7', '#ff6b4a'];
             for (let i = 0; i < 25; i++) {
                 const p = document.createElement('div');
@@ -293,18 +290,13 @@
                 p.style.animationDuration = (Math.random() * 12 + 8) + 's';
                 p.style.animationDelay = Math.random() * 10 + 's';
                 p.style.opacity = Math.random() * 0.4 + 0.1;
-                particlesContainer.appendChild(p);
+                pc.appendChild(p);
             }
         }
         createParticles();
 
-        // CLOSE IMAGE VIEWER WITH ESC
         document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                closeModal();
-                closeThemePanel();
-                closeImageViewer();
-            }
+            if (e.key === 'Escape') { closeModal(); closeThemePanel(); closeImageViewer(); }
         });
     </script>
 </body>
