@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Krima's Iced Chains</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background: #000; color: #fff; }
+        .header { background: linear-gradient(135deg, #1a1a1a, #333); padding: 30px 20px; text-align: center; border-bottom: 3px solid #f5a623; }
+        .header h1 { font-size: 2em; color: #f5a623; margin-bottom: 5px; }
+        .header p { color: #ccc; font-size: 0.9em; }
+        .products { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; padding: 20px; max-width: 1200px; margin: 0 auto; }
+        .product-card { background: #1a1a1a; border-radius: 12px; overflow: hidden; border: 1px solid #333; transition: transform 0.3s; }
+        .product-card:hover { transform: translateY(-5px); }
+        .product-card img { width: 100%; height: 250px; object-fit: cover; }
+        .product-info { padding: 15px; }
+        .product-info h3 { color: #f5a623; margin-bottom: 8px; font-size: 1.1em; }
+        .product-info .price { font-size: 1.3em; font-weight: bold; color: #4CAF50; margin-bottom: 12px; }
+        .order-btn { width: 100%; padding: 12px; background: #f5a623; color: #000; border: none; border-radius: 6px; font-size: 1em; font-weight: bold; cursor: pointer; transition: background 0.3s; }
+        .order-btn:hover { background: #e09515; }
+
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 1000; justify-content: center; align-items: center; }
+        .modal.active { display: flex; }
+        .modal-content { background: #1a1a1a; padding: 25px; border-radius: 12px; max-width: 400px; width: 90%; border: 1px solid #333; }
+        .modal-content h2 { color: #f5a623; margin-bottom: 15px; text-align: center; }
+        .modal-content label { display: block; margin: 10px 0 4px; color: #ccc; font-size: 0.9em; }
+        .modal-content input, .modal-content select { width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #555; background: #2a2a2a; color: #fff; font-size: 1em; }
+        .modal-content input:focus { border-color: #f5a623; outline: none; }
+        .submit-btn { width: 100%; padding: 12px; background: #4CAF50; color: #fff; border: none; border-radius: 6px; font-size: 1em; font-weight: bold; margin-top: 15px; cursor: pointer; }
+        .submit-btn:hover { background: #3d8b40; }
+        .close-btn { width: 100%; padding: 10px; background: #555; color: #fff; border: none; border-radius: 6px; margin-top: 8px; cursor: pointer; }
+
+        .success-msg { display: none; text-align: center; padding: 40px 20px; }
+        .success-msg.active { display: block; }
+        .success-msg h2 { color: #4CAF50; font-size: 2em; margin-bottom: 10px; }
+        .whatsapp-float { position: fixed; bottom: 25px; right: 25px; background: #25D366; color: #fff; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.8em; text-decoration: none; box-shadow: 0 4px 15px rgba(37,211,102,0.4); z-index: 999; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>💎 Krima's Iced Chains</h1>
+        <p>Premium Cuban Chains • Nairobi Pickup • 700 KES - 2,500 KES</p>
+    </div>
+
+    <div class="products" id="productsContainer"></div>
+
+    <div class="modal" id="orderModal">
+        <div class="modal-content" id="modalContent"></div>
+    </div>
+
+    <div class="success-msg" id="successMsg">
+        <h2>✅ Order Sent!</h2>
+        <p>I'll reach out to you on WhatsApp shortly to finalize.</p>
+    </div>
+
+    <a href="https://wa.me/254722621818" target="_blank" class="whatsapp-float" title="Chat on WhatsApp">💬</a>
+
+    <script>
+        const products = [
+            { name: "Gold Iced Cuban Chain - 18\"", price: 2500, image: "https://via.placeholder.com/400x300/f5a623/000?text=Chain+1" },
+            { name: "Silver Cuban Link Chain - 20\"", price: 1800, image: "https://via.placeholder.com/400x300/cccccc/000?text=Chain+2" },
+            { name: "Iced Out Tennis Chain - 22\"", price: 2200, image: "https://via.placeholder.com/400x300/f5a623/000?text=Chain+3" },
+            { name: "Classic Cuban Chain - 16\"", price: 1200, image: "https://via.placeholder.com/400x300/cccccc/000?text=Chain+4" },
+            { name: "Thick Iced Cuban - 24\"", price: 2500, image: "https://via.placeholder.com/400x300/f5a623/000?text=Chain+5" }
+        ];
+
+        const container = document.getElementById('productsContainer');
+        products.forEach((p, i) => {
+            container.innerHTML += `
+                <div class="product-card">
+                    <img src="${p.image}" alt="${p.name}">
+                    <div class="product-info">
+                        <h3>${p.name}</h3>
+                        <div class="price">KES ${p.price.toLocaleString()}</div>
+                        <button class="order-btn" onclick="openOrder(${i})">🛒 Order Now</button>
+                    </div>
+                </div>
+            `;
+        });
+
+        function openOrder(index) {
+            const p = products[index];
+            document.getElementById('modalContent').innerHTML = `
+                <h2>Place Your Order</h2>
+                <p style="color:#f5a623;margin-bottom:10px;text-align:center;"><strong>${p.name}</strong> — KES ${p.price.toLocaleString()}</p>
+                <label>Your Full Name *</label>
+                <input type="text" id="custName" placeholder="e.g. Brian Mwangi" required>
+                <label>Your Phone Number *</label>
+                <input type="tel" id="custPhone" placeholder="e.g. 0712345678" required>
+                <label>Pickup Location (Nairobi area) *</label>
+                <input type="text" id="pickupLoc" placeholder="e.g. CBD, Moi Avenue" required>
+                <button class="submit-btn" onclick="submitOrder('${p.name}', ${p.price})">📩 Send Order</button>
+                <button class="close-btn" onclick="closeModal()">Cancel</button>
+            `;
+            document.getElementById('orderModal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('orderModal').classList.remove('active');
+        }
+
+        function submitOrder(productName, price) {
+            const name = document.getElementById('custName').value.trim();
+            const phone = document.getElementById('custPhone').value.trim();
+            const location = document.getElementById('pickupLoc').value.trim();
+
+            if (!name || !phone || !location) {
+                alert('Please fill in all fields');
+                return;
+            }
+
+            const message = `🛒 *New Order — Krima's Iced Chains*%0A%0A👤 *Customer:* ${name}%0A📞 *Phone:* ${phone}%0A💎 *Item:* ${productName}%0A💰 *Price:* KES ${price.toLocaleString()}%0A📍 *Pickup:* ${location}`;
+            const whatsappURL = `https://wa.me/254722621818?text=${message}`;
+
+            window.open(whatsappURL, '_blank');
+            closeModal();
+            document.getElementById('successMsg').classList.add('active');
+            setTimeout(() => document.getElementById('successMsg').classList.remove('active'), 5000);
+        }
+
+        document.getElementById('orderModal').addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+    </script>
+
+</body>
+</html>
