@@ -25,7 +25,7 @@
         .modal-content { background: #1a1a1a; padding: 25px; border-radius: 12px; max-width: 400px; width: 90%; border: 1px solid #333; }
         .modal-content h2 { color: #f5a623; margin-bottom: 15px; text-align: center; }
         .modal-content label { display: block; margin: 10px 0 4px; color: #ccc; font-size: 0.9em; }
-        .modal-content input, .modal-content select { width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #555; background: #2a2a2a; color: #fff; font-size: 1em; }
+        .modal-content input { width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #555; background: #2a2a2a; color: #fff; font-size: 1em; }
         .modal-content input:focus { border-color: #f5a623; outline: none; }
         .submit-btn { width: 100%; padding: 12px; background: #4CAF50; color: #fff; border: none; border-radius: 6px; font-size: 1em; font-weight: bold; margin-top: 15px; cursor: pointer; }
         .submit-btn:hover { background: #3d8b40; }
@@ -41,7 +41,7 @@
 
     <div class="header">
         <h1>💎 Krima's Iced Chains</h1>
-        <p>Premium Cuban Chains • Nairobi Pickup • 700 KES - 2,500 KES</p>
+        <p>Premium Cuban Chains & Bracelets • Nairobi Pickup</p>
     </div>
 
     <div class="products" id="productsContainer"></div>
@@ -52,18 +52,18 @@
 
     <div class="success-msg" id="successMsg">
         <h2>✅ Order Sent!</h2>
-        <p>I'll reach out to you on WhatsApp shortly to finalize.</p>
+        <p>Thank you! I'll reach out on WhatsApp shortly to confirm your order.</p>
     </div>
 
     <a href="https://wa.me/254722621818" target="_blank" class="whatsapp-float" title="Chat on WhatsApp">💬</a>
 
     <script>
         const products = [
-            { name: "Gold Iced Cuban Chain - 18\"", price: 2500, image: "https://via.placeholder.com/400x300/f5a623/000?text=Chain+1" },
-            { name: "Silver Cuban Link Chain - 20\"", price: 1800, image: "https://via.placeholder.com/400x300/cccccc/000?text=Chain+2" },
-            { name: "Iced Out Tennis Chain - 22\"", price: 2200, image: "https://via.placeholder.com/400x300/f5a623/000?text=Chain+3" },
-            { name: "Classic Cuban Chain - 16\"", price: 1200, image: "https://via.placeholder.com/400x300/cccccc/000?text=Chain+4" },
-            { name: "Thick Iced Cuban - 24\"", price: 2500, image: "https://via.placeholder.com/400x300/f5a623/000?text=Chain+5" }
+            { name: "Cuban Gold Chain", price: 1000, image: "chain1.jpg" },
+            { name: "Cuban Silver Chain", price: 1000, image: "chain2.jpg" },
+            { name: "Cuban Blue Ice Chain", price: 1000, image: "chain3.jpg" },
+            { name: "Cuban Gold Bracelet", price: 800, image: "chain4.jpg" },
+            { name: "Cuban Iced Set", price: 1999, image: "chain5.jpg" }
         ];
 
         const container = document.getElementById('productsContainer');
