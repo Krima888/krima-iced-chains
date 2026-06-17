@@ -53,7 +53,6 @@
         .header > * { position: relative; z-index: 1; }
         .header-badge { display: inline-block; background: rgba(255,255,255,0.15); backdrop-filter: blur(10px); color: #fff; padding: 6px 16px; border-radius: 20px; font-size: 0.75em; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 12px; border: 1px solid rgba(255,255,255,0.2); }
         
-        /* HOLOGRAPHIC HEADER TEXT */
         .header h1 {
             font-size: 2.2em;
             font-weight: 800;
@@ -227,6 +226,45 @@
         .whatsapp-float::after { content: ''; position: absolute; inset: -6px; border-radius: 50%; border: 2px solid rgba(37,211,102,0.4); animation: ripple 1.5s infinite; }
         @keyframes ripple { 0% { inset: -6px; opacity: 1; } 100% { inset: -20px; opacity: 0; } }
 
+        /* NEXT PAGE ARROW */
+        .next-page-arrow {
+            position: fixed;
+            bottom: 100px;
+            right: 20px;
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
+            background: var(--card-bg);
+            backdrop-filter: var(--glass-blur);
+            border: 1px solid var(--card-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6em;
+            color: var(--accent);
+            cursor: pointer;
+            z-index: 998;
+            opacity: 0;
+            transform: translateY(20px);
+            pointer-events: none;
+            transition: opacity 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+        .next-page-arrow.show {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+        .next-page-arrow:hover {
+            background: var(--accent);
+            color: #000;
+            box-shadow: 0 0 20px var(--accent-glow);
+            border-color: var(--accent);
+        }
+        .next-page-arrow:active {
+            transform: scale(0.9);
+        }
+
         @media (max-width: 600px) {
             .header h1 { font-size: 1.5em; }
             .theme-panel { width: 85%; }
@@ -235,6 +273,7 @@
             .trust-bar { gap: 16px; padding: 8px 12px; }
             .trust-item { font-size: 0.7em; gap: 4px; }
             .tab { font-size: 0.7em; padding: 12px 6px; }
+            .next-page-arrow { bottom: 90px; right: 16px; width: 40px; height: 40px; font-size: 1.4em; }
         }
     </style>
 </head>
@@ -287,6 +326,9 @@
         <div class="products" id="productsContainer"></div>
     </div>
 
+    <!-- NEXT PAGE ARROW -->
+    <div class="next-page-arrow" id="nextPageArrow" onclick="goToNextPage()">›</div>
+
     <div class="modal" id="orderModal"><div class="modal-content" id="modalContent"></div></div>
 
     <div class="toast" id="toast">✅ Order Sent Successfully!</div>
@@ -311,6 +353,7 @@
         const container = document.getElementById('productsContainer');
         const badgeClasses = { hot: 'badge-hot', new: 'badge-new', value: 'badge-value' };
         const tabBar = document.getElementById('tabBar');
+        const nextArrow = document.getElementById('nextPageArrow');
 
         function renderProducts(filter = 'all') {
             container.innerHTML = '';
@@ -335,6 +378,7 @@
                 container.appendChild(card);
             });
             attachCardEffects();
+            updateArrowVisibility();
         }
 
         function switchToCategory(index) {
@@ -347,6 +391,34 @@
             });
             renderProducts(category);
         }
+
+        function goToNextPage() {
+            if (currentCategoryIndex < categories.length - 1) {
+                switchToCategory(currentCategoryIndex + 1);
+            }
+        }
+
+        function updateArrowVisibility() {
+            // Show arrow only if not on the last category AND user has scrolled near the bottom
+            const isLast = currentCategoryIndex >= categories.length - 1;
+            if (isLast) {
+                nextArrow.classList.remove('show');
+                return;
+            }
+            const scrollY = window.scrollY + window.innerHeight;
+            const docHeight = document.documentElement.scrollHeight;
+            const threshold = 200; // pixels from bottom
+            if (docHeight - scrollY < threshold) {
+                nextArrow.classList.add('show');
+            } else {
+                nextArrow.classList.remove('show');
+            }
+        }
+
+        // Listen to scroll for arrow visibility
+        window.addEventListener('scroll', updateArrowVisibility);
+        // Also update after rendering new products (scroll position might change)
+        window.addEventListener('resize', updateArrowVisibility);
 
         tabBar.addEventListener('click', (e) => {
             const tab = e.target.closest('.tab');
@@ -520,7 +592,10 @@
             if (e.key === 'ArrowLeft') switchToCategory(currentCategoryIndex - 1);
         });
 
+        // Initial render
         renderProducts('bracelet');
+        // Check arrow after initial load
+        setTimeout(updateArrowVisibility, 100);
     </script>
 </body>
 </html>
