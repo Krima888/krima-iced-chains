@@ -52,7 +52,25 @@
         .header::before { content: ''; position: absolute; inset: 0; background: rgba(0,0,0,0.55); z-index: 0; }
         .header > * { position: relative; z-index: 1; }
         .header-badge { display: inline-block; background: rgba(255,255,255,0.15); backdrop-filter: blur(10px); color: #fff; padding: 6px 16px; border-radius: 20px; font-size: 0.75em; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 12px; border: 1px solid rgba(255,255,255,0.2); }
-        .header h1 { font-size: 2.2em; font-weight: 800; color: #fff; letter-spacing: 1px; text-shadow: 0 0 30px rgba(0,0,0,0.5); }
+        
+        /* HOLOGRAPHIC HEADER TEXT */
+        .header h1 {
+            font-size: 2.2em;
+            font-weight: 800;
+            letter-spacing: 2px;
+            text-shadow: 0 0 20px rgba(255,255,255,0.3);
+            background: linear-gradient(90deg, #ff6ec4, #7873f5, #4ecdc4, #ffe66d, #ff6ec4);
+            background-size: 400% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: hologramShift 4s linear infinite;
+            filter: drop-shadow(0 0 15px rgba(255,255,255,0.2));
+        }
+        @keyframes hologramShift {
+            0% { background-position: 0% center; }
+            100% { background-position: 400% center; }
+        }
         .header p { color: rgba(255,255,255,0.85); font-size: 0.85em; font-weight: 500; margin-top: 5px; letter-spacing: 0.5px; }
 
         .settings-btn { position: absolute; top: 18px; right: 18px; background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.2); color: #fff; width: 42px; height: 42px; border-radius: 50%; font-size: 1.2em; cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 100; backdrop-filter: blur(10px); transition: all 0.3s ease; }
@@ -255,7 +273,6 @@
         <div class="trust-item"><span class="icon">💬</span> Instant WhatsApp Support</div>
     </div>
 
-    <!-- TABS REORDERED: Bracelets, Chains, Sets, All -->
     <div class="tabs-container">
         <div class="tabs" id="tabBar">
             <button class="tab active" data-category="bracelet">Bracelets<span class="count">3</span></button>
@@ -288,9 +305,8 @@
             { name: "Cuban Silver Bracelet", price: 800, image: "chain8.jpg", category: "bracelet", badge: "new", badgeText: "✨ New" }
         ];
 
-        // New order: bracelets first, then chains, then sets, then all
         const categories = ['bracelet', 'chain', 'set', 'all'];
-        let currentCategoryIndex = 0; // starts at bracelets
+        let currentCategoryIndex = 0;
 
         const container = document.getElementById('productsContainer');
         const badgeClasses = { hot: 'badge-hot', new: 'badge-new', value: 'badge-value' };
@@ -332,7 +348,6 @@
             renderProducts(category);
         }
 
-        // Tab click handler
         tabBar.addEventListener('click', (e) => {
             const tab = e.target.closest('.tab');
             if (!tab) return;
@@ -341,7 +356,6 @@
             if (index !== -1) switchToCategory(index);
         });
 
-        // Swipe detection
         const swipeArea = document.getElementById('swipeArea');
         let touchStartX = 0;
         let touchStartY = 0;
@@ -506,7 +520,6 @@
             if (e.key === 'ArrowLeft') switchToCategory(currentCategoryIndex - 1);
         });
 
-        // Initial render with Bracelets first
         renderProducts('bracelet');
     </script>
 </body>
