@@ -226,43 +226,50 @@
         .whatsapp-float::after { content: ''; position: absolute; inset: -6px; border-radius: 50%; border: 2px solid rgba(37,211,102,0.4); animation: ripple 1.5s infinite; }
         @keyframes ripple { 0% { inset: -6px; opacity: 1; } 100% { inset: -20px; opacity: 0; } }
 
-        /* NEXT PAGE ARROW */
+        /* NEXT PAGE ARROW - MIDDLE RIGHT */
         .next-page-arrow {
             position: fixed;
-            bottom: 100px;
-            right: 20px;
-            width: 46px;
-            height: 46px;
+            top: 45%;
+            right: 10px;
+            transform: translateY(-50%);
+            width: 48px;
+            height: 48px;
             border-radius: 50%;
-            background: var(--card-bg);
-            backdrop-filter: var(--glass-blur);
-            border: 1px solid var(--card-border);
+            background: rgba(20,20,20,0.75);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255,255,255,0.15);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.6em;
+            font-size: 1.8em;
             color: var(--accent);
             cursor: pointer;
             z-index: 998;
-            opacity: 0;
-            transform: translateY(20px);
-            pointer-events: none;
-            transition: opacity 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-        }
-        .next-page-arrow.show {
             opacity: 1;
-            transform: translateY(0);
             pointer-events: auto;
+            transition: opacity 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5), 0 0 15px var(--accent-glow);
+            animation: arrowPulse 2s infinite;
+        }
+        .next-page-arrow.hide {
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(-50%) scale(0.8);
         }
         .next-page-arrow:hover {
             background: var(--accent);
             color: #000;
-            box-shadow: 0 0 20px var(--accent-glow);
+            box-shadow: 0 0 35px var(--accent-glow);
             border-color: var(--accent);
+            transform: translateY(-50%) scale(1.08);
         }
         .next-page-arrow:active {
-            transform: scale(0.9);
+            transform: translateY(-50%) scale(0.95);
+        }
+        @keyframes arrowPulse {
+            0% { box-shadow: 0 4px 20px rgba(0,0,0,0.5), 0 0 15px var(--accent-glow); }
+            50% { box-shadow: 0 4px 20px rgba(0,0,0,0.5), 0 0 30px var(--accent); }
+            100% { box-shadow: 0 4px 20px rgba(0,0,0,0.5), 0 0 15px var(--accent-glow); }
         }
 
         @media (max-width: 600px) {
@@ -273,7 +280,7 @@
             .trust-bar { gap: 16px; padding: 8px 12px; }
             .trust-item { font-size: 0.7em; gap: 4px; }
             .tab { font-size: 0.7em; padding: 12px 6px; }
-            .next-page-arrow { bottom: 90px; right: 16px; width: 40px; height: 40px; font-size: 1.4em; }
+            .next-page-arrow { width: 42px; height: 42px; font-size: 1.5em; right: 6px; }
         }
     </style>
 </head>
@@ -326,7 +333,7 @@
         <div class="products" id="productsContainer"></div>
     </div>
 
-    <!-- NEXT PAGE ARROW -->
+    <!-- NEXT PAGE ARROW (MIDDLE RIGHT) -->
     <div class="next-page-arrow" id="nextPageArrow" onclick="goToNextPage()">›</div>
 
     <div class="modal" id="orderModal"><div class="modal-content" id="modalContent"></div></div>
@@ -399,26 +406,13 @@
         }
 
         function updateArrowVisibility() {
-            // Show arrow only if not on the last category AND user has scrolled near the bottom
             const isLast = currentCategoryIndex >= categories.length - 1;
             if (isLast) {
-                nextArrow.classList.remove('show');
-                return;
-            }
-            const scrollY = window.scrollY + window.innerHeight;
-            const docHeight = document.documentElement.scrollHeight;
-            const threshold = 200; // pixels from bottom
-            if (docHeight - scrollY < threshold) {
-                nextArrow.classList.add('show');
+                nextArrow.classList.add('hide');
             } else {
-                nextArrow.classList.remove('show');
+                nextArrow.classList.remove('hide');
             }
         }
-
-        // Listen to scroll for arrow visibility
-        window.addEventListener('scroll', updateArrowVisibility);
-        // Also update after rendering new products (scroll position might change)
-        window.addEventListener('resize', updateArrowVisibility);
 
         tabBar.addEventListener('click', (e) => {
             const tab = e.target.closest('.tab');
@@ -594,8 +588,6 @@
 
         // Initial render
         renderProducts('bracelet');
-        // Check arrow after initial load
-        setTimeout(updateArrowVisibility, 100);
     </script>
 </body>
 </html>
